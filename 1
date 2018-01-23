@@ -1,0 +1,29 @@
+(defun my-last (xlist)
+  (car (reverse xlist)))
+
+(defun my-but-last (x)
+  (cadr (reverse x)))
+
+(defun element-at (x n)
+  (if (= n 1)
+	(car x)
+	(element-at (cdr x) (1- n))))
+
+(defun my-length (x)
+  (if x
+    (1+ (my-length (cdr x)))
+    0))
+
+(defun my-reverse (x)
+  (let ((xrev ()))
+	(dolist (y x xrev) (push y xrev))))
+
+(defun palindrome-p (x)
+  (every
+    (lambda (pair) (eql (car pair) (cdr pair)))
+	  (mapcar #'cons x (reverse x))))
+
+(defun my-flatten (x)
+  (cond ((not x) nil)
+	    ((listp (car x)) (append (my-flatten (car x)) (my-flatten (cdr x))))
+		(t (append (list (car x))) (my-flatten (cdr x)))))
