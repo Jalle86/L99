@@ -6,13 +6,13 @@
 (defun my-but-last (x)
   (cadr (reverse x)))
 
-:: P03
+;; P03
 (defun element-at (x n)
   (if (= n 1)
 	(car x)
 	(element-at (cdr x) (1- n))))
 
-:: P04
+;; P04
 (defun my-length (x)
   (if x
     (1+ (my-length (cdr x)))
@@ -92,23 +92,11 @@
 
 ;; P16
 (defun drop (x n)
-  (labels
-	((count (x m)
-	(if x
-	 (if (zerop m)
-	   (count (cdr x) n)
-	   (append (list (car x) (count (cdr x) (- n 1))))
-	   ()))))
-	(count x n)))
-	
-	(defun split (x n)
-  (labels ((trailsplit (x n)
-    (if (zerop n)
-      (cons nil x)
-      (let ((parts (trailsplit (cdr x) (1- n))))
-        (cons (append (list (car x)) (car parts)) (cdr parts))))))
-  (let ((result (trailsplit x n)))
-    (list (car result) (cdr result)))))
+  (labels ((droponzero (x m)
+    (cond ((null x) nil)
+          ((zerop m) (droponzero (cdr x) (1- n)))
+          (t (append (list (car x)) (droponzero (cdr x) (1- m)))))))
+  (droponzero x (1- n))))
 
 ;; P17
 (defun split (x n)
@@ -154,12 +142,25 @@
 
 ;; P23
 (defun rnd-select (x n)
-  (let ((num (random (length x))))
+  (let ((num (if x (random (length x)) 0)))
   (if (zerop n)
       ()
       (append (list (nth num x)) (rnd-select (remove-at x (1+ num)) (1- n))))))
 
 ;; P24
 (defun lotto-select (n m)
-  (loop for i from 1 to n
-    collect (1+ (random m))))
+  (rnd-select (range 1 m) n))
+
+;; P25
+(defun rnd-permu (x)
+  (rnd-select x (length x)))
+
+;; P26
+(defun combination (n x)
+  (if (zerop n)
+	(list nil)
+	(loop for y in x
+		  for i from 0
+		  append
+		    (let ((rotated (rotate x i)))
+			  (mapcar (lambda (a) (append (list (car rotated)) a)) (combination (1- n) (cdr rotated)))))))
