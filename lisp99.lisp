@@ -157,10 +157,10 @@
 
 ;; P26
 (defun combination (n x)
-  (if (zerop n)
-	(list nil)
-	(loop for y in x
-		  for i from 0
-		  append
-		    (let ((rotated (rotate x i)))
-			  (mapcar (lambda (a) (append (list (car rotated)) a)) (combination (1- n) (cdr rotated)))))))
+  (if (zerop (1- n))
+    (mapcar #'list x)
+    (loop for xx on x
+          when (>= (length xx) n)
+          append (mapcar (lambda (y)
+                            (append (list (car xx)) y)) (combination (1- n) (cdr xx))))))
+;; P27
