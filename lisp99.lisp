@@ -164,3 +164,20 @@
           append (mapcar (lambda (y)
                             (append (list (car xx)) y)) (combination (1- n) (cdr xx))))))
 ;; P27
+(defun group (x n)
+  (if (null n)
+     x
+     (flet ((rest (y) (set-difference x y)))
+       (mapcar (lambda (y) (concatenate 'list (list y) (group (rest y) (cdr n)))) (combination (car n) x)))))
+
+;; P28 a
+(defun lsort (x)
+  (sort x (lambda (a b) (< (length a) (length b)))))
+
+;; P28 b
+(defun lfsort (x)
+ ((flet freq (x freq)
+  (concatenate 'list (list (list x (length (filter (lambda (y) (eq y x)) x))))))
+  
+  
+  (mapcar #'length x)
