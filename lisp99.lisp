@@ -175,9 +175,17 @@
   (sort x (lambda (a b) (< (length a) (length b)))))
 
 ;; P28 b
-(defun lfsort (x)
- ((flet freq (x freq)
-  (concatenate 'list (list (list x (length (filter (lambda (y) (eq y x)) x))))))
-  
-  
-  (mapcar #'length x)
+(defun partition (x fn)
+  (let ((tl ()) (fl ()))
+  (loop for e in x
+   do (push e (if (funcall fn e) tl fl)))
+   (list tl fl)))
+
+(defun lsort (x)
+  (labels ((freq (z)
+    (if z
+      (let ((p (partition z (lambda (y) (equal (car z) y)))))
+         (cons (cons (caar p) (length (car p))) (freq (cadr p))))
+      ())))
+  (let ((freqlist (sort (freq (mapcar #'length x)) (lambda (a b) (< (cdr a) (cdr b))))))
+    (mapcan (lambda (y) (remove-if-not (lambda (z) (equal (car y) (length z))) x)) freqlist))))
