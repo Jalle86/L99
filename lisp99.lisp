@@ -189,3 +189,34 @@
       ())))
   (let ((freqlist (sort (freq (mapcar #'length x)) (lambda (a b) (< (cdr a) (cdr b))))))
     (mapcan (lambda (y) (remove-if-not (lambda (z) (equal (car y) (length z))) x)) freqlist))))
+
+;; P31
+(defun is-prime (n)
+  (let ((nums (make-array (1+ n))))
+  (flet ((mark (x)
+    (loop for i from (+ x x) to n by x
+      do (setf (aref nums i) 't))))
+  (loop for i from 2 to n
+    when (null (aref nums i))
+    do (mark i))
+  (null (aref nums n)))))
+
+;; P32
+(defun my-gcd (m n)
+  (if (zerop (mod m n))
+    n
+    (my-gcd n (mod m n))))
+
+;; P33
+(defun coprime (m n)
+  (= 1 (my-gcd m n)))
+
+;; P34
+(defun totient-phi (n)
+  (length (remove-if-not (lambda (m) (coprime m n)) (loop for i from 1 to n collect i))))
+
+;; P35
+(defun prime-factors (n)
+  (loop for i from floor(sqrt(n)) downto 2
+    when (zerop (mod n i))
+    return (i 
