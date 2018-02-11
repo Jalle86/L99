@@ -217,6 +217,23 @@
 
 ;; P35
 (defun prime-factors (n)
-  (loop for i from floor(sqrt(n)) downto 2
-    when (zerop (mod n i))
-    return (i 
+  (if (<= n 3)
+    (list n)
+    (loop for i from 2 to (1- n)
+      thereis (when (zerop (mod n i))
+      (append (list i) (prime-factors (floor(/ n i)))))
+      finally (return (list n)))))
+
+;; P36
+(defun prime-factors-mult (n)
+  (flet ((flip (x)
+    (if (atom x)
+      (list x 1)
+      (list (cadr x) (car x)))))
+   (mapcar #'flip (encode-modified (prime-factors n)))))
+
+;; P37
+(defun totient-phi-mod (n)
+  (flet ((phi-part (x)
+    (expt (* (1- (car x) (car x))) (1- (cadr x)))))
+  (reduce (lambda (acc x) (+ acc (phi-part x))) (prime-factors-mult n))))
