@@ -237,3 +237,24 @@
   (flet ((phi-part (x)
     (expt (* (1- (car x) (car x))) (1- (cadr x)))))
   (reduce (lambda (acc x) (+ acc (phi-part x))) (prime-factors-mult n))))
+
+;; P54
+(defun istree (x)
+  (cond ((null x) 't)
+        ((atom x) 't)
+        ((= (length x) 3)
+          (and (istree (cadr x)) (istree (caddr x))))
+        (t nil)))
+
+;; P55
+(defun cbal-tree (n)
+  (if (zerop n)
+    (list 'x nil nil)
+    (list 'x (cbal-tree (floor (/ (1- n) 2))) (cbal-tree (ceiling (/ (1- n) 2))))))
+
+;; P56
+(def issymmetrictree (x)
+  (flet ((mirror (t1 t2)
+    (cond ((and (null t1) (null t2)) t)
+          (and (mirror (cadr t1) (caddr t2)) (mirror (cadr t2) (caddr t1))))))
+  (mirror (cadr x) (caddr x))
